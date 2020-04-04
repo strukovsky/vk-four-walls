@@ -5,11 +5,15 @@ import Icon24Education from '@vkontakte/icons/dist/24/education';
 import Icon24Poll from '@vkontakte/icons/dist/24/poll';
 import Icon24User from '@vkontakte/icons/dist/24/user';
 import Today from "./Today";
+import Cookie from "../cookie/Cookie";
+import Stats from "./Stats";
+import Profile from "./Profile";
 
 
 class Main extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             activeStory: 'today'
         };
@@ -52,8 +56,20 @@ class Main extends Component {
             >
                 <View id={"today"} activePanel={"today"}>
                     <Panel id={"today"}>
-                        <PanelHeader>DADADA</PanelHeader>
+                        <PanelHeader>Сегодня</PanelHeader>
                         <Today/>
+                    </Panel>
+                </View>
+                <View id={"stats"} activePanel={"stats"}>
+                    <Panel id={"stats"}>
+                        <PanelHeader>Статистика</PanelHeader>
+                        <Stats/>
+                    </Panel>
+                </View>
+                <View id={"profile"} activePanel={"profile"}>
+                    <Panel id={"profile"}>
+                        <PanelHeader>Настройки</PanelHeader>
+                        <Profile/>
                     </Panel>
                 </View>
             </Epic>

@@ -1,24 +1,54 @@
-.App {
-  text-align: center;
+.card0{
+  background: bisque;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.card1{
+  background: burlywood;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.card2{
+  background: lavenderblush;
 }
 
-.App-intro {
-  font-size: large;
+.card3{
+  background: blanchedalmond;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.Header__content{
+  color: white
+}
+
+.Card__in{
+  display: flex;
+}
+
+.Header{
+  height: 144px;
+  margin: auto;
+  display: flex;
+}
+
+.Header__in{
+  margin: auto
+}
+
+.FormField__border{
+  margin: auto;
+}
+
+
+.cardDone{
+  background: chartreuse;
+}
+.cardProcess{
+  background: orange;
+}
+
+.cardDismiss{
+  background: crimson;
+}
+
+
+.Stats{
+  margin:auto
 }
