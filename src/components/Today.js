@@ -123,9 +123,8 @@ export default class Today extends Component {
                                    (this.state.item === null) ? "Редактируйте цель" : this.state.item.title
                                }</ModalPageHeader>
                            }
-                >
-                    <FormLayout>
-                        <Input placeholder={"Имя"} value={this.state.item === null ? "" : this.state.item.title}
+                ><FormLayout>
+                        <Input   maxLength={15}  placeholder={"Имя"} value={this.state.item === null ? "" : this.state.item.title}
                                onChange={(e) => {
                                    this.changeActivityTitle(e.target.value);
                                }}/>
@@ -135,6 +134,15 @@ export default class Today extends Component {
                                     this.setState({activeModal: null})
                                 }}>Закрыть</Button>) :
                                 (<div>
+                                        <Button onClick={() => {
+                                            if(this.state.activities.toString() !== ',,,')
+                                            {
+                                                Cookie.setCurrentActivities(this.state.activities);
+                                            }
+                                            this.setState({activeModal: null})
+
+
+                                        }}>Закрыть</Button>
                                         <Button mode={"commerce"} onClick={
                                             () => {
 
@@ -155,15 +163,6 @@ export default class Today extends Component {
                                                 }
                                             }
                                         }>Отказаться от цели</Button>
-                                        <Button onClick={() => {
-                                            if(this.state.activities.toString() !== ',,,')
-                                            {
-                                                Cookie.setCurrentActivities(this.state.activities);
-                                            }
-                                            this.setState({activeModal: null})
-
-
-                                        }}>Закрыть</Button>
                                     </div>
 
                                 )
