@@ -1,13 +1,26 @@
 import Cookies from "js-cookie"
 export default class Cookie {
     static setAuth() {
-        Cookies.set("auth", "1", {expires: 180})
+        Cookies.set("auth", "1", {expires: 365})
+    }
+
+    static getCountOfActivities()
+    {
+        let countOfActivities = Cookies.get("activitiesCount");
+        if(typeof countOfActivities === "undefined" || countOfActivities ===  null)
+            countOfActivities = 4;
+        return parseInt(countOfActivities);
+    }
+
+    static setCountOfActivities(count)
+    {
+        Cookies.set("activitiesCount", count, {expires: 365})
     }
 
 
     static setEndOfDay(hour) {
 
-        Cookies.set("end", hour, {expires: 180})
+        Cookies.set("end", hour, {expires: 365})
     }
 
     static addDays(date, days) {
@@ -18,33 +31,29 @@ export default class Cookie {
 
     static setCurrentActivities(activities) {
         let currentActivities = Cookie.getCurrentActivities();
-
         if (currentActivities.toString() === ",,,") {
             let end = Cookie.getEndOfDay();
             let options = { hour:'numeric', minute:'numeric' };
             let date = new Date();
             let currentHour = date.getHours();
-            if (currentHour > end) {
+            if (currentHour >= end) {
                 date.setMinutes(0);
                 date.setHours(end);
                 date = Cookie.addDays(date, 1);
-
-
                 options = { weekday: 'short', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric' };
                 let formattedDate = date.toLocaleDateString("ru-RU", options);
-                console.log(formattedDate);
-                Cookies.set("until", formattedDate, {expires: 180})
+                Cookies.set("until", formattedDate, {expires: 365})
             }
             else{
                 date.setHours(end);
                 date.setMinutes(0);
-                Cookies.set("until", end + ":00", {expires: 180});
+                Cookies.set("until", end + ":00", {expires: 365});
             }
 
-            Cookies.set("until-date", date.getTime(), {expires: 180});
-            Cookies.set("current", activities, {expires: 180});
+            Cookies.set("until-date", date.getTime(), {expires: 365});
+            Cookies.set("current", activities, {expires: 365});
         } else
-            Cookies.set("current", activities)
+            Cookies.set("current", activities, {expires: 365});
 
     }
 
@@ -76,7 +85,10 @@ export default class Cookie {
     }
 
     static getUntil() {
-        return Cookies.get("until");
+        let until = Cookies.get("until");
+        if(typeof until === "undefined")
+            return null;
+        else return until;
     }
 
 
@@ -94,11 +106,47 @@ export default class Cookie {
     }
 
     static getCurrentActivities() {
+        let count = Cookie.getCountOfActivities();
+        console.log(parseInt(count));
         try {
-            return JSON.parse(Cookies.get("current"));
+            let array = JSON.parse(Cookies.get("current"));
+            let length = array.length;
+            if(array.length < count)
+            {
+                for(let i = length; i < count; i++)
+                {
+                    array.push(null);
+                }
+            }
+            if(array.length > count)
+            {
+                let newArray = [];
+                array.forEach((item)=>{
+                    if(item !== null)
+                        newArray.push(item);
+                });
+                let newLength = newArray.length;
+                if(newLength <= count)
+                {
+                    for(let i = newLength; i < count; i++)
+                    {
+                        newArray.push(null);
+                    }
+                }
+                else
+                {
+                    Cookie.setCountOfActivities(newLength);
+
+                }
+                return newArray;
+            }
+            return array;
         } catch (e) {
             console.log(e);
-            return [null, null, null, null]
+            let emptyArray = [];
+            for(let i = 0; i < count; i++)
+                emptyArray.push(null);
+            return emptyArray;
         }
     }
 

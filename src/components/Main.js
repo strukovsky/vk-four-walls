@@ -23,14 +23,28 @@ import Cookie from "../cookie/Cookie";
 import Stats from "./Stats";
 import Profile from "./Profile";
 
-let countOfActivities = 4;
-
-
-
 
 class Main extends Component {
+
     constructor(props) {
         super(props);
+        if(!Cookie.isAuth())
+            document.location.replace("/");
+        let untilDateStr = Cookie.getUntilDate();
+        if(typeof untilDateStr !== "undefined")
+        {
+            let now = new Date();
+            let untilDate = new Date(parseInt(untilDateStr));
+            if(now > untilDate)
+            {
+                console.log(now);
+                console.log(untilDate);
+                let activities = Cookie.getCurrentActivities();
+                Cookie.removeActivities();
+                Cookie.removeDate();
+                Cookie.addToStats(activities, untilDateStr);
+            }
+        }
 
         this.state = {
             activeStory: 'today',
@@ -38,9 +52,17 @@ class Main extends Component {
             activeModal: null,
             item: null,
         };
+
         this.onStoryChange = this.onStoryChange.bind(this);
         this.until = Cookie.getUntil();
+        let countOfActivities = Cookie.getCountOfActivities();
+        this.emptyActivitiesStr = ','.repeat(countOfActivities-1);
+        this.emptyArray = [];
+        for(let i = 0; i < countOfActivities; i++)
+            this.emptyArray.push(null);
     }
+
+
 
     handleActivity(item, id) {
 
@@ -71,18 +93,15 @@ class Main extends Component {
         this.setState({item: item, activities: activities, activeModal: null})
     }
 
-    //TODO: add saving changes to cookie
     onStoryChange(e) {
         let story = e.currentTarget.dataset.story;
         this.setState({
             activeStory: story
         });
-        if (story !== 'today')
-            Cookie.setCurrentActivities(this.state.activities);
-
     }
 
     render() {
+        console.log(this.state.activities);
         let array = this.state.activities.map((item, i) => {
             if (item === null) {
                 return (
@@ -129,8 +148,8 @@ class Main extends Component {
                 }}
             >
                 <ModalPage id={"edit"} onClose={() => {
-                    this.setState({activeModal: null})
-                    if (this.state.activities.toString() !== ',,,') {
+                    this.setState({activeModal: null});
+                    if (this.state.activities.toString() !== this.emptyActivitiesStr) {
                         Cookie.setCurrentActivities(this.state.activities);
                     }
                 }}
@@ -152,18 +171,19 @@ class Main extends Component {
                             }}>Закрыть</Button>) :
                             (<div>
                                     <Button onClick={() => {
-                                        if (this.state.activities.toString() !== ',,,') {
+                                        if (this.state.activities.toString() !== this.emptyActivitiesStr) {
                                             Cookie.setCurrentActivities(this.state.activities);
                                         }
                                         this.setState({activeModal: null})
 
 
                                     }}>Закрыть</Button>
+
                                     <Button mode={"commerce"} onClick={
                                         () => {
 
                                             this.changeActivityStatus("done");
-                                            if (this.state.activities.toString() !== ',,,') {
+                                            if (this.state.activities.toString() !== this.emptyActivitiesStr) {
                                                 Cookie.setCurrentActivities(this.state.activities);
                                             }
 
@@ -172,7 +192,7 @@ class Main extends Component {
                                     <Button mode={"destructive"} onClick={
                                         () => {
                                             this.changeActivityStatus("dismiss");
-                                            if (this.state.activities.toString() !== ',,,') {
+                                            if (this.state.activities.toString() !== this.emptyActivitiesStr) {
                                                 Cookie.setCurrentActivities(this.state.activities);
                                             }
                                         }
@@ -191,7 +211,7 @@ class Main extends Component {
         let until = (<Header>Успей до {this.until}. <Button onClick={() => {
             let activities = this.state.activities;
             Cookie.setCurrentActivities(activities);
-            this.setState({activities: [null, null, null, null]});
+            this.setState({activities: this.emptyArray});
             let date = Cookie.getUntilDate();
             Cookie.addToStats(activities, date);
             this.until = null;
@@ -206,7 +226,7 @@ class Main extends Component {
             {array}
         </CardGrid>);
 
-        if (typeof this.until === "undefined" || this.until === null || this.state.activities.toString() === ',,,')
+        if (this.until === null || this.state.activities.toString() === this.emptyActivitiesStr)
             today = (
                 <CardGrid>
                     {array}

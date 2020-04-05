@@ -15,21 +15,9 @@ class App extends Component {
 
 
     render() {
-        let untilDateStr = Cookie.getUntilDate();
-        if(typeof untilDateStr !== "undefined")
-        {
-            let now = new Date();
-            let untilDate = new Date(parseInt(untilDateStr));
-            if(now > untilDate)
-            {
-                let activities = Cookie.getCurrentActivities();
-                Cookie.removeActivities();
-                Cookie.removeDate();
-                Cookie.addToStats(activities, untilDateStr);
-            }
-        }
 
 
+        console.log("App.js");
         let routes = (
             <Switch>
                 <Route history={history} exact path='/main'>
