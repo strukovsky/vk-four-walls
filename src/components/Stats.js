@@ -45,15 +45,57 @@ export default class Stats extends Component{
 
     static prettyEmpties(countOfEmpties)
     {
-        if(countOfEmpties === 1)
-        {
-            return "Не прописана одна цель";
+        switch (countOfEmpties) {
+            case 2:
+                return "не прописаны две цели";
+            case 3:
+                return "не прописаны три цели";
+            case 4:
+                return "не прописаны четыре цели";
+            case 5:
+                return "не прописаны пять целей";
+            case 6:
+                return "не прописаны шесть целей";
+            case 7:
+                return "не прописаны семь целей";
+            case 8:
+                return "не прописаны восемь целей";
+            case 9:
+                return "не прописаны девять целей";
+            case 10:
+                return "не прописаны десять целей";
+            default:
+                return countOfEmpties + " штук";
         }
-        if(countOfEmpties === 2)
-            return "Не прописаны две цели";
-        if(countOfEmpties === 3)
-            return "Не прописаны три цели";
     }
+
+    static prettySize(size) {
+        switch (size) {
+            case 2:
+                return "двух";
+            case 3:
+                return "трех";
+            case 4:
+                return "четырех";
+            case 5:
+                return "пяти";
+            case 6:
+                return "шести";
+            case 7:
+                return "семи";
+            case 8:
+                return "восьми";
+            case 9:
+                return "девяти";
+            case 10:
+                return "десяти";
+            default:
+                return size + " штук";
+        }
+    }
+
+
+
     render() {
         if(typeof this.stats !== "undefined")
         {
@@ -92,7 +134,7 @@ export default class Stats extends Component{
                 return <Card key={i} size={"l"} className={"card"+(i%4)}>
 
                     <FormLayout className={"Stats"}>
-                        <Cell>Дата: {dateStr}. {Stats.prettyEmpties(countOfEmpties)} (из четырех)</Cell>
+                        <Cell>Дата: {dateStr}. {Stats.prettyEmpties(countOfEmpties)} (из {Stats.prettySize(size)})</Cell>
                         {activities}
                     </FormLayout>
 
@@ -121,5 +163,6 @@ export default class Stats extends Component{
         }
 
     }
+
 
 }

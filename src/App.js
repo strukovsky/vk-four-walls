@@ -15,9 +15,6 @@ class App extends Component {
 
 
     render() {
-
-
-        console.log("App.js");
         let routes = (
             <Switch>
                 <Route history={history} exact path='/main'>

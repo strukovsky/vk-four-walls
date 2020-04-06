@@ -1,4 +1,5 @@
 import Cookies from "js-cookie"
+
 export default class Cookie {
     static setAuth() {
         Cookies.set("auth", "1", {expires: 365})
@@ -29,9 +30,17 @@ export default class Cookie {
         return result;
     }
 
+    static getEmptyString() {
+        let countOfActivities = Cookie.getCountOfActivities();
+        return ','.repeat(countOfActivities - 1);
+    }
+
     static setCurrentActivities(activities) {
         let currentActivities = Cookie.getCurrentActivities();
-        if (currentActivities.toString() === ",,,") {
+
+
+
+        if (currentActivities.toString() === Cookie.getEmptyString()) {
             let end = Cookie.getEndOfDay();
             let options = { hour:'numeric', minute:'numeric' };
             let date = new Date();

@@ -37,8 +37,7 @@ class Main extends Component {
             let untilDate = new Date(parseInt(untilDateStr));
             if(now > untilDate)
             {
-                console.log(now);
-                console.log(untilDate);
+
                 let activities = Cookie.getCurrentActivities();
                 Cookie.removeActivities();
                 Cookie.removeDate();
@@ -54,7 +53,9 @@ class Main extends Component {
         };
 
         this.onStoryChange = this.onStoryChange.bind(this);
+
         this.until = Cookie.getUntil();
+        console.log("constructor " + this.until);
         let countOfActivities = Cookie.getCountOfActivities();
         this.emptyActivitiesStr = ','.repeat(countOfActivities-1);
         this.emptyArray = [];
@@ -101,7 +102,6 @@ class Main extends Component {
     }
 
     render() {
-        console.log(this.state.activities);
         let array = this.state.activities.map((item, i) => {
             if (item === null) {
                 return (
@@ -225,6 +225,7 @@ class Main extends Component {
             {until}
             {array}
         </CardGrid>);
+
 
         if (this.until === null || this.state.activities.toString() === this.emptyActivitiesStr)
             today = (
