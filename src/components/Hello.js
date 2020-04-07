@@ -89,7 +89,7 @@ export default class Hello extends Component {
     secondPageClick()
     {
         Cookie.setAuth();
-        document.location.replace("http:localhost:3000/main/")
+        document.location.replace("https://vk-four-walls.herokuapp.com/main/")
     }
 
     render() {
