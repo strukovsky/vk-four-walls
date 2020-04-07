@@ -1,14 +1,9 @@
 import React, {Component} from 'react'
 import {
-    Button,
     Cell,
     CellButton,
     FormLayout,
-    Group, Header,
-    Input,
-    ModalPage,
-    ModalPageHeader,
-    ModalRoot, Slider
+    Group, Slider
 } from "@vkontakte/vkui";
 import Cookie from "../cookie/Cookie";
 

@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import Cookie from "../cookie/Cookie";
 import {CardGrid, FormLayout, Header, Card, Cell, List} from "@vkontakte/vkui";
 import Icon24Done from '@vkontakte/icons/dist/24/done';
-import Icon24Flash from '@vkontakte/icons/dist/24/flash';
 import Icon24DismissSubstract from '@vkontakte/icons/dist/24/dismiss_substract';
 
 export default class Stats extends Component{

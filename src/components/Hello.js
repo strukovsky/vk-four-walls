@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Card, Cell, CellButton, Group, Panel, PanelHeader, View} from "@vkontakte/vkui";
+import {Card, Panel, PanelHeader, View} from "@vkontakte/vkui";
 import Cookie from "../cookie/Cookie";
 
 export default class Hello extends Component {
