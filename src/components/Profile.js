@@ -12,6 +12,7 @@ import {
 } from "@vkontakte/vkui";
 import Cookie from "../cookie/Cookie";
 
+
 export default class Profile extends Component {
     constructor(props) {
         super(props);

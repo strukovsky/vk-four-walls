@@ -63,6 +63,62 @@ class Main extends Component {
             this.emptyArray.push(null);
     }
 
+    consoleText() {
+        let words = ["Нажми сюда"];
+        let colors = ['#111'];
+        let visible = true;
+        let con = document.getElementById('console');
+        let letterCount = 1;
+        let x = 1;
+        let waiting = false;
+        let target = document.getElementById('text');
+        target.setAttribute('style', 'color:' + colors[0]);
+        let i = 0;
+        window.setInterval(function () {
+
+            if (letterCount === 0 && waiting === false) {
+                waiting = true;
+                target.innerHTML = words[0].substring(0, letterCount)
+                window.setTimeout(function () {
+                    let usedColor = colors.shift();
+                    colors.push(usedColor);
+                    let usedWord = words.shift();
+                    words.push(usedWord);
+                    x = 1;
+                    target.setAttribute('style', 'color:' + colors[0]);
+                    letterCount += x;
+                    waiting = false;
+
+
+                }, 900)
+            } else if (letterCount === words[0].length + 1 && waiting === false) {
+                waiting = true;
+                window.setTimeout(function () {
+                    x = -1;
+                    letterCount += x;
+                    waiting = false;
+                    i++;
+
+
+                }, 900)
+            } else if (waiting === false) {
+                target.innerHTML = words[0].substring(0, letterCount);
+                letterCount += x;
+            }
+        }, 90);
+        window.setInterval(function () {
+            if (visible === true) {
+                con.className = 'console-underscore hidden';
+                visible = false;
+
+            } else {
+                con.className = 'console-underscore';
+
+                visible = true;
+            }
+        }, 400)
+    }
+
 
 
     handleActivity(item, id) {
@@ -101,9 +157,16 @@ class Main extends Component {
         });
     }
 
+    componentDidMount() {
+        if(this.state.activities[0] === null)
+        this.consoleText();
+    }
+
+
     render() {
         let array = this.state.activities.map((item, i) => {
             if (item === null) {
+                if(i > 0)
                 return (
                     <Card size="l" key={i}
                           className={"card" + (i + 37) % 4} onClick={() => {
@@ -113,6 +176,26 @@ class Main extends Component {
                         <Header>Нажми меня</Header>
                     </Card>
                 );
+                else
+                {
+                    console.log(item);
+                    console.log(i);
+                    return (
+                        <Card size="l" key={i}
+                              className={"card" + (i + 37) % 4} onClick={() => {
+                            this.handleActivity(item, i)
+                        }}>
+
+                            <Header>
+                                <span id='text'/>
+                                <div className='console-underscore' id='console'>_*</div>
+                            </Header>
+
+                        </Card>
+                    );
+                }
+
+
             } else {
                 let status = item.status;
                 let view = (<Card onClick={() => {
@@ -155,11 +238,11 @@ class Main extends Component {
                 }}
                            header={
                                <ModalPageHeader>{
-                                   (this.state.item === null) ? "Редактируйте цель" : this.state.item.title
+                                   (this.state.item === null) ? "Какую цель хочешь выполнить?" : this.state.item.title
                                }</ModalPageHeader>
                            }
-                ><FormLayout>
-                    <Input autoFocus maxLength={15} placeholder={"Имя"}
+                ><FormLayout >
+                    <Input autoFocus maxLength={45} placeholder={"Введи цель. Покороче, пожалуйста."}
                            value={this.state.item === null ? "" : this.state.item.title}
                            onChange={(e) => {
                                this.changeActivityTitle(e.target.value);
@@ -169,7 +252,7 @@ class Main extends Component {
                             (<Button onClick={() => {
                                 this.setState({activeModal: null})
                             }}>Закрыть</Button>) :
-                            (<div>
+                            (<div style={{margin: "auto"}}>
                                     <Button onClick={() => {
                                         if (this.state.activities.toString() !== this.emptyActivitiesStr) {
                                             Cookie.setCurrentActivities(this.state.activities);
@@ -217,6 +300,7 @@ class Main extends Component {
             this.until = null;
             Cookie.removeActivities();
             Cookie.removeDate();
+            window.location.reload();
 
 
         }}>Завершить досрочно</Button></Header>);

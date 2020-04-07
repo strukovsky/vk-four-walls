@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import Cookie from "../cookie/Cookie";
-import {CardGrid, FormLayout, Header, Card, Cell} from "@vkontakte/vkui";
+import {CardGrid, FormLayout, Header, Card, Cell, List} from "@vkontakte/vkui";
+import Icon24Done from '@vkontakte/icons/dist/24/done';
+import Icon24Flash from '@vkontakte/icons/dist/24/flash';
+import Icon24DismissSubstract from '@vkontakte/icons/dist/24/dismiss_substract';
 
 export default class Stats extends Component{
     constructor(props) {
@@ -46,6 +49,8 @@ export default class Stats extends Component{
     static prettyEmpties(countOfEmpties)
     {
         switch (countOfEmpties) {
+            case 1:
+                return "не прописана одна цель";
             case 2:
                 return "не прописаны две цели";
             case 3:
@@ -71,6 +76,8 @@ export default class Stats extends Component{
 
     static prettySize(size) {
         switch (size) {
+            case 1:
+                return " одной";
             case 2:
                 return "двух";
             case 3:
@@ -97,7 +104,7 @@ export default class Stats extends Component{
 
 
     render() {
-        if(typeof this.stats !== "undefined")
+        if(this.stats.length > 0)
         {
             let analysis = this.analyze();
             let array = this.stats.map((item, i) => {
@@ -109,33 +116,41 @@ export default class Stats extends Component{
                 let countOfEmpties = 0;
                 let activities = item.activities.map((item, i) =>{
                     if(typeof item !== "undefined" && item !== null)
-                        return <Cell key={i}>{item.title} - {Stats.prettyStatus(item.status)}</Cell>
+                        if (item.status === 'done') {
+                            return (<Cell before={<Icon24Done fill={"#111"}/>} key={i}>{item.title} - {Stats.prettyStatus(item.status)}</Cell>);
+                        } else {
+                            return (<Cell before={<Icon24DismissSubstract fill={"#111"}/>} key={i}>{item.title} - {Stats.prettyStatus(item.status)}</Cell>);
+                        }
                     else
                         countOfEmpties++;
                 });
 
                 if(countOfEmpties === 0)
                 {
-                    return <Card key={i} size={"m"} className={"card"+(i%4)}>
+                    return <Card key={i} size={"m"} className={"cardDone"}>
                         <FormLayout className={"Stats"}>
-                            <Cell>Дата: {dateStr}</Cell>
-                            {activities}
+                            <Cell>{dateStr}</Cell>
+                            <List>
+                                {activities}
+                            </List>
                         </FormLayout>
                     </Card>
                 }
 
                 if(countOfEmpties === size)
                 {
-                    return <Card key={i} size={"s"} className={"card"+(i%4)}>
-                        <Cell>Дата: {dateStr}. Ничего не сделано :(</Cell>
+                    return <Card key={i} size={"s"} className={"cardDismiss"}>
+                        <Cell>{dateStr}. Ничего не сделано :(</Cell>
                     </Card>
                 }
 
-                return <Card key={i} size={"l"} className={"card"+(i%4)}>
+                return <Card key={i} size={"l"} className={"cardDismiss"}>
 
                     <FormLayout className={"Stats"}>
-                        <Cell>Дата: {dateStr}. {Stats.prettyEmpties(countOfEmpties)} (из {Stats.prettySize(size)})</Cell>
-                        {activities}
+                        <Cell>{dateStr}. {Stats.prettyEmpties(countOfEmpties)} (из {Stats.prettySize(size)})</Cell>
+                        <List>
+                            {activities}
+                        </List>
                     </FormLayout>
 
                 </Card>
